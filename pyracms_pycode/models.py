@@ -12,6 +12,7 @@ class CodeObject(Base):
     id = Column(Integer, primary_key=True)
     display_name = Column(Unicode(128), index=True, nullable=False)
     code = Column(UnicodeText, default='')
+    created = Column(DateTime, default=datetime.now)
     album_id = Column(Integer, ForeignKey('codealbum.id'), nullable=False)
     album = relationship("CodeAlbum")
 
