@@ -1,5 +1,19 @@
 {% extends "main.jinja2" %}
 {% block title %} - Viewing {{ album.display_name }} {% endblock %}
 {% block content %}
-    {{ album.display_name }}
+    <div class="pycode_header">
+        <p class="pycode_header_display_name">{{ album.display_name }}</p>
+        <p class="pycode_header_description">{{ album.description }}</p>
+    </div>
+    <div class="pycode_list">
+        {% for object in album.objects %}
+            <p><a href="#">{{ object.display_name }}</a></p>
+        {% endfor %}
+    </div>
+    <div class="pycode_code_view_edit">
+
+    </div>
+    <div class="pycode_result">
+
+    </div>
 {% endblock content %}
