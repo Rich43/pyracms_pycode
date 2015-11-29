@@ -1,8 +1,6 @@
-from pyracms import SettingsLib
-from pyracms.factory import RootFactory
-#from pyracms.models import DBSession, Base
+from pyracms.models import DBSession, Base
 from pyramid.paster import get_appsettings, setup_logging
-from pyramid.security import Allow, Everyone, Authenticated
+from ..lib.pycodelib import PyCodeLib
 from sqlalchemy import engine_from_config
 import os
 import sys
@@ -24,4 +22,7 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
-        pass
+        p = PyCodeLib()
+        album = p.create_album("Dummy Album", "This is a test")
+        album.objects.append(p.create_object("Dummy Code",
+                                             "print 'hello world'"))

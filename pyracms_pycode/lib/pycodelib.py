@@ -26,7 +26,6 @@ class PyCodeLib:
         object.display_name = display_name
         object.code = code
         DBSession.add(object)
-        DBSession.flush()
         return object
 
     def show_object(self, o_id):

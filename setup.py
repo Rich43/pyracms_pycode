@@ -37,7 +37,7 @@ setup(name='pyracms_pycode',
       [paste.app_factory]
       main = pyracms_pycode:main
       [console_scripts]
-      initialize_pyracms_article_db = pyracms_article.scripts.initializedb:main
+      initialize_pyracms_pycode_db = pyracms_pycode.scripts.initializedb:main
       """,
       paster_plugins=['pyramid'],
       )
