@@ -1,5 +1,5 @@
 {% extends "main.jinja2" %}
-{% block title %} - Viewing {% endblock %}
+{% block title %} - Viewing {{ album.display_name }} {% endblock %}
 {% block content %}
-    {{ code }}
+    {{ album.display_name }}
 {% endblock content %}
