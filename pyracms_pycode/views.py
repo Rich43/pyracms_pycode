@@ -1,6 +1,7 @@
 from pyracms.lib.helperlib import rapid_deform, redirect
 
-from pyracms_pycode.deform_schemas.pycode import EditObjectSchema
+from pyracms_pycode.deform_schemas.pycode import (EditObjectSchema,
+                                                  EditAlbumSchema)
 from .lib.pycodelib import PyCodeLib
 from pyramid.view import view_config
 from io import StringIO
@@ -55,9 +56,27 @@ def delete_object(context, request):
     p.delete_object(o_id)
     return redirect(request, "show", a_id=a_id)
 
+@view_config(route_name='pycode_create_album', renderer='deform.jinja2',
+             permission="group:admin")
+@view_config(route_name='pycode_update_album', renderer='deform.jinja2',
+             permission="group:admin")
+def create_update_album(context, request):
+    a_id = request.matchdict.get('a_id')
+    def crupdate_album_submit(context, request, deserialized, bind_params):
+        return redirect(request, "home")
+    result = rapid_deform(context, request, EditAlbumSchema,
+                          crupdate_album_submit, a_id=a_id)
+    if isinstance(result, dict):
+        word = "Create"
+        if a_id: word = "Update"
+        message = "%s Album" % word
+        result.update({"title": message, "header": message})
+    return result
+
 @view_config(route_name='pycode_delete_album', permission="group:admin")
 def delete_album(context, request):
     a_id = request.matchdict.get('a_id')
     p = PyCodeLib()
     p.delete_album(a_id)
     return redirect(request, "home")
+
