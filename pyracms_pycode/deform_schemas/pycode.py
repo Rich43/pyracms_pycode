@@ -7,4 +7,4 @@ class EditAlbumSchema(MappingSchema):
 
 class EditObjectSchema(MappingSchema):
     display_name = SchemaNode(String(), widget=TextInputWidget(size=40))
-    code = SchemaNode(String(), widget=TextAreaWidget(cols=80, rows=100))
+    code = SchemaNode(String(), widget=TextAreaWidget(cols=80, rows=25))

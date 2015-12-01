@@ -4,16 +4,47 @@
     <div class="pycode_header">
         <p class="pycode_header_display_name">{{ album.display_name }}</p>
         <p class="pycode_header_description">{{ album.description }}</p>
+        <p class="pycode_header_create">
+            <a href="{{ request.route_url("create", a_id=album.id) }}">
+                Create new code
+            </a>
+        </p>
     </div>
-    <div class="pycode_list">
-        {% for object in album.objects %}
-            <p><a href="#">{{ object.display_name }}</a></p>
-        {% endfor %}
-    </div>
-    <div class="pycode_code_view_edit">
+    <table width="100%" border="1">
+      <tr>
+        <td width="200">
+            {% if album.objects.count() > 0 %}
+                <a href="{{ request.route_url("show_2", a_id=album.id,
+                    o_id=album.objects[0].id) }}">
+                    {{ album.objects[0].display_name }}</a>
+            {% endif %}
+        </td>
+        <td rowspan="{{ album.objects.count() }}">
+            {% if object %}
+                {% if request.has_permission("group:admin") %}
+                    {{ form | safe }}
+                {% else %}
+                    <p class="pycode_code_display_name">{{ object.display_name }}</p>
+                    <p class="pycode_code_code">
+                   {{ highlight(object.code) | safe}}</p>
+                {% endif %}
+            {%  endif %}
+        </td>
+        <td rowspan="{{ album.objects.count() }}">
+            {% if result %}<pre>{{ result }}</pre>{%  endif %}
+            {% if exception %}<pre>{{ exception }}</pre>{%  endif %}
+        </td>
+      </tr>
+          {% for object in album.objects %}
+          {% if not loop.first %}
+              <tr>
+                <td  width="200">
+                    <a href="{{ request.route_url("show_2", a_id=album.id,
+                        o_id=object.id) }}">{{ object.display_name }}</a>
+                </td>
+              </tr>
+          {% endif %}
+      {% endfor %}
+    </table>
 
-    </div>
-    <div class="pycode_result">
-
-    </div>
 {% endblock content %}
