@@ -58,7 +58,7 @@ def show(context, request):
         try:
             buffer = StringIO()
             sys.stdout = buffer
-            exec("__name__ = 'main'\n" + object.code)
+            exec("__name__ = '__main__'\n" + object.code)
             sys.stdout = sys.__stdout__
             result = buffer.getvalue()
         except Exception as e:
