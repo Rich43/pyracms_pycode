@@ -107,10 +107,25 @@ def delete_object(context, request):
              permission="group:admin")
 def create_update_album(context, request):
     a_id = request.matchdict.get('a_id')
+    display_name, description = ("", "")
+    p = PyCodeLib()
+    if a_id:
+        album = p.show_album(a_id)
+        display_name = album.display_name
+        description = album.description
+
     def crupdate_album_submit(context, request, deserialized, bind_params):
-        return redirect(request, "home")
+        if not a_id:
+            album = p.create_album(deserialized['display_name'],
+                                   deserialized['description'])
+        else:
+            album = p.show_album(a_id)
+            album.display_name = deserialized['display_name']
+            album.description = deserialized['description']
+        return redirect(request, "pycode_show", a_id=album.id)
     result = rapid_deform(context, request, EditAlbumSchema,
-                          crupdate_album_submit, a_id=a_id)
+                          crupdate_album_submit, a_id=a_id,
+                          display_name=display_name, description=description)
     if isinstance(result, dict):
         word = "Create"
         if a_id: word = "Update"

@@ -1,4 +1,4 @@
-from pyracms import SettingsLib
+from pyracms.lib.menulib import MenuLib
 from pyracms.models import DBSession, Base
 from pyramid.paster import get_appsettings, setup_logging
 from ..lib.pycodelib import PyCodeLib
@@ -28,3 +28,8 @@ def main(argv=sys.argv):
         for i in range(5):
             album.objects.append(p.create_object("Dummy Code %s" % i,
                                                  "print('hello world')"))
+
+        m = MenuLib()
+        group = m.show_group("admin_area")
+        m.add_menu_item_route("Add Code Album", "pycode_create_album", 40,
+                              group)
