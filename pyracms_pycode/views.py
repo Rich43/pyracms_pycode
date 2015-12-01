@@ -41,7 +41,7 @@ def show(context, request):
                      result, 'exception': excepton, 'highlight': code_format})
     return result_2
 
-@view_config(route_name='pycode_create', permission="group:admin")
+@view_config(route_name='pycode_create_object', permission="group:admin")
 def create_object(context, request):
     a_id = request.matchdict.get('a_id')
     p = PyCodeLib()
