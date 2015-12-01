@@ -32,4 +32,4 @@ def main(argv=sys.argv):
         m = MenuLib()
         group = m.show_group("admin_area")
         m.add_menu_item_route("Add Code Album", "pycode_create_album", 40,
-                              group)
+                              group, 'group:admin')
