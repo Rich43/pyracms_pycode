@@ -23,6 +23,7 @@ def show(context, request):
     object = None
     excepton = None
     result = ""
+    result_2 = {}
     if o_id:
         object = p.show_object(o_id)
         try:
@@ -33,10 +34,10 @@ def show(context, request):
             result = buffer.getvalue()
         except Exception as e:
             excepton = e
-    def object_update_submit(context, request, deserialized, bind_params):
-        return redirect(request, "show_2", a_id=a_id, o_id=o_id)
-    result_2 = rapid_deform(context, request, EditObjectSchema,
-                            object_update_submit, object=object)
+        def object_update_submit(context, request, deserialized, bind_params):
+            return redirect(request, "show_2", a_id=a_id, o_id=o_id)
+        result_2 = rapid_deform(context, request, EditObjectSchema,
+                                object_update_submit, object=object)
     result_2.update({'album': p.show_album(a_id), 'object': object, 'result':
                      result, 'exception': excepton, 'highlight': code_format})
     return result_2
@@ -45,8 +46,10 @@ def show(context, request):
 def create_object(context, request):
     a_id = request.matchdict.get('a_id')
     p = PyCodeLib()
-    p.create_object("Untitled code", "print('hello world')")
-    return redirect(request, "show", a_id=a_id)
+    album = p.show_album(a_id)
+    album.objects.append(p.create_object("Untitled code",
+                                         "print('hello world')"))
+    return redirect(request, "pycode_show", a_id=a_id)
 
 @view_config(route_name='pycode_delete_object', permission="group:admin")
 def delete_object(context, request):
@@ -54,7 +57,7 @@ def delete_object(context, request):
     o_id = request.matchdict.get('o_id')
     p = PyCodeLib()
     p.delete_object(o_id)
-    return redirect(request, "show", a_id=a_id)
+    return redirect(request, "pycode_show", a_id=a_id)
 
 @view_config(route_name='pycode_create_album', renderer='deform.jinja2',
              permission="group:admin")
