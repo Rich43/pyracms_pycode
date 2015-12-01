@@ -5,7 +5,8 @@
         <p class="pycode_header_display_name">{{ album.display_name }}</p>
         <p class="pycode_header_description">{{ album.description }}</p>
         <p class="pycode_header_create">
-            <a href="{{ request.route_url("create", a_id=album.id) }}">
+            <a href="{{ request.route_url("pycode_create_object", a_id=album
+            .id) }}">
                 Create new code
             </a>
         </p>
@@ -14,7 +15,7 @@
       <tr>
         <td width="200">
             {% if album.objects.count() > 0 %}
-                <a href="{{ request.route_url("show_2", a_id=album.id,
+                <a href="{{ request.route_url("pycode_show_2", a_id=album.id,
                     o_id=album.objects[0].id) }}">
                     {{ album.objects[0].display_name }}</a>
             {% endif %}
@@ -39,7 +40,8 @@
           {% if not loop.first %}
               <tr>
                 <td  width="200">
-                    <a href="{{ request.route_url("show_2", a_id=album.id,
+                    <a href="{{ request.route_url("pycode_show_2", a_id=album
+                    .id,
                         o_id=object.id) }}">{{ object.display_name }}</a>
                 </td>
               </tr>
