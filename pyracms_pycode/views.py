@@ -40,9 +40,24 @@ def show(context, request):
                      result, 'exception': excepton, 'highlight': code_format})
     return result_2
 
-@view_config(route_name='pycode_create')
-def create(context, request):
+@view_config(route_name='pycode_create', permission="group:admin")
+def create_object(context, request):
     a_id = request.matchdict.get('a_id')
     p = PyCodeLib()
     p.create_object("Untitled code", "print('hello world')")
     return redirect(request, "show", a_id=a_id)
+
+@view_config(route_name='pycode_delete_object', permission="group:admin")
+def delete_object(context, request):
+    a_id = request.matchdict.get('a_id')
+    o_id = request.matchdict.get('o_id')
+    p = PyCodeLib()
+    p.delete_object(o_id)
+    return redirect(request, "show", a_id=a_id)
+
+@view_config(route_name='pycode_delete_album', permission="group:admin")
+def delete_album(context, request):
+    a_id = request.matchdict.get('a_id')
+    p = PyCodeLib()
+    p.delete_album(a_id)
+    return redirect(request, "home")
