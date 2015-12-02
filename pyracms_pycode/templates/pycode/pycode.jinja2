@@ -40,8 +40,8 @@
                     {% endif %}
             {% endif %}
         </td>
-        <td rowspan="{{ album.objects.count() }}" style="vertical-align: top;">
-            <div style="padding: 10px;">
+        <td rowspan="{{ album.objects.count() }}" style="vertical-align: top;" class="pycode_code_td">
+            <div style="padding: 10px;" class="pycode_code_div">
             {% if object %}
                 {% if request.has_permission("group:admin") %}
                     {{ form | safe }}
@@ -55,17 +55,17 @@
             {%  endif %}
             </div>
         </td>
-        <td rowspan="{{ album.objects.count() }}" style="vertical-align: top;">
-            <div style="min-width:300px; padding: 10px;">
-                {% if result %}<pre>{{ result }}</pre>{%  endif %}
-                {% if exception %}<pre>{{ exception }}</pre>{%  endif %}
+        <td rowspan="{{ album.objects.count() }}" style="vertical-align: top;" class="pycode_result_td">
+            <div style="min-width:300px; padding: 10px;" class="pycode_result_div">
+                {% if result %}<pre class="pycode_result_pre">{{ result }}</pre>{%  endif %}
+                {% if exception %}<pre class="pycode_result_pre">{{ exception }}</pre>{%  endif %}
             </div>
         </td>
       </tr>
           {% for object in album.objects %}
           {% if not loop.first %}
               <tr>
-                <td  width="200" style="text-align: center;">
+                <td  width="200" style="text-align: center;" class="pycode_file_td">
                     <a href="{{ request.route_url("pycode_show_2",
                     a_id=album.id, o_id=object.id) }}">
                         {{ object.display_name }}</a>
