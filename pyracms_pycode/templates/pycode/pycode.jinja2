@@ -25,8 +25,7 @@
     <table width="100%" border="0">
       <tr>
         <th>Files</th>
-        <th>Code</th>
-        <th>Result</th>
+        <th>Code and Result</th>
       </tr>
       <tr>
         <td width="200" style="text-align: center;">
@@ -43,11 +42,11 @@
         <td rowspan="{{ album.objects.count() }}" style="vertical-align: top;" class="pycode_code_td">
             <div style="padding: 10px;" class="pycode_code_div">
             {% if object %}
+                <h3 class="pycode_code_display_name">{{ object
+                    .display_name }}</h3>
                 {% if request.has_permission("group:admin") %}
                     {{ form | safe }}
                 {% else %}
-                    <h3 class="pycode_code_display_name">{{ object
-                    .display_name }}</h3>
                     <p class="pycode_code_code">
                    {{ highlight(object.code) | safe}}
                     </p>
@@ -55,6 +54,7 @@
             {%  endif %}
             </div>
             <div style="min-width:300px; padding: 10px;" class="pycode_result_div">
+		        <h3>Result</h3>
                 {% if result %}<pre class="pycode_result_pre">{{ result }}</pre>{%  endif %}
                 {% if exception %}<pre class="pycode_result_pre">{{ exception }}</pre>{%  endif %}
             </div>
