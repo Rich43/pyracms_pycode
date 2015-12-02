@@ -12,9 +12,25 @@ from pygments.formatters import HtmlFormatter
 from os.path import splitext, split
 import sys
 import zipfile
+import tempfile
+import subprocess
 
 def code_format(code):
     return highlight(code, PythonLexer(), HtmlFormatter(noclasses=True))
+
+def run_code(code):
+    tf = tempfile.NamedTemporaryFile()
+    tf.write(code.encode())
+    tf.flush()
+    subproc = subprocess.Popen(["python3", tf.name], stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+    stderr = subproc.stderr.read()
+    stdout = subproc.stdout.read()
+    tf.close()
+    if stderr.strip():
+        return stderr.decode()
+    else:
+        return stdout.decode()
 
 @view_config(route_name='pycode_show', renderer='pycode/pycode.jinja2')
 @view_config(route_name='pycode_show_2', renderer='pycode/pycode.jinja2')
@@ -31,12 +47,7 @@ def show(context, request):
             file_obj = deserialized.get('python_code_file')
             if file_obj:
                 album = p.show_album(a_id)
-                if file_obj['mimetype'] == 'text/x-python':
-                    title = splitext(file_obj['filename'])[0]
-                    data = file_obj['fp'].read().decode()
-                    album.objects.append(p.create_object(title, data))
-
-                if file_obj['mimetype'] == 'application/zip':
+                if splitext(file_obj['filename'])[1].lower() == '.zip':
                     zip = zipfile.ZipFile(file_obj['fp'])
                     for file_name in zip.namelist():
                         path_split = splitext(file_name)
@@ -44,7 +55,10 @@ def show(context, request):
                             title = split(path_split[0])[-1]
                             data = zip.open(file_name).read().decode()
                             album.objects.append(p.create_object(title, data))
-
+                elif splitext(file_obj['filename'])[1].lower() == '.py':
+                    title = splitext(file_obj['filename'])[0]
+                    data = file_obj['fp'].read().decode()
+                    album.objects.append(p.create_object(title, data))
             return redirect(request, "pycode_show", a_id=a_id)
         rap_def = rapid_deform(context, request, CodeUploadSchema,
                                code_upload_submit, form_name='code_upload',
@@ -55,14 +69,7 @@ def show(context, request):
             return rap_def
     if o_id:
         object = p.show_object(o_id)
-        try:
-            buffer = StringIO()
-            sys.stdout = buffer
-            exec("__name__ = '__main__'\n" + object.code)
-            sys.stdout = sys.__stdout__
-            result = buffer.getvalue()
-        except Exception as e:
-            excepton = e
+        result = run_code(object.code)
         def object_update_submit(context, request, deserialized, bind_params):
             if (request.has_permission("group:admin") and
                     deserialized.get('display_name') and
