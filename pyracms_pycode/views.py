@@ -19,13 +19,21 @@ def code_format(code):
     return highlight(code, PythonLexer(), HtmlFormatter(noclasses=True))
 
 def run_code(code):
+    stdout = b""
+    stderr = b""
     tf = tempfile.NamedTemporaryFile()
     tf.write(code.encode())
     tf.flush()
     subproc = subprocess.Popen(["python3", tf.name], stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
-    stderr = subproc.stderr.read()
-    stdout = subproc.stdout.read()
+    try:
+        subproc.wait(timeout=15)
+        stderr = subproc.stderr.read()
+        stdout = subproc.stdout.read()
+    except subprocess.TimeoutExpired:
+        subproc.kill()
+        stderr = b"Timed out"
+
     tf.close()
     if stderr.strip():
         return stderr.decode()
@@ -69,7 +77,12 @@ def show(context, request):
             return rap_def
     if o_id:
         object = p.show_object(o_id)
-        result = run_code(object.code)
+        if object.render:
+            result = run_code(object.code)
+            object.result = result
+            object.render = False
+        else:
+            result = object.result
         def object_update_submit(context, request, deserialized, bind_params):
             if (request.has_permission("group:admin") and
                     deserialized.get('display_name') and
@@ -77,6 +90,7 @@ def show(context, request):
                 object = bind_params['object']
                 object.display_name = deserialized['display_name']
                 object.code = deserialized['code']
+                object.render = True
             return redirect(request, "pycode_show_2", a_id=a_id, o_id=o_id)
         rap_def = rapid_deform(context, request, EditObjectSchema,
                                object_update_submit, object=object,

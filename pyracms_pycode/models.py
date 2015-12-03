@@ -12,6 +12,8 @@ class CodeObject(Base):
     id = Column(Integer, primary_key=True)
     display_name = Column(Unicode(128), index=True, nullable=False)
     code = Column(UnicodeText, default='')
+    result = Column(UnicodeText, default='')
+    render = Column(Boolean, default=True)
     created = Column(DateTime, default=datetime.now)
     album_id = Column(Integer, ForeignKey('codealbum.id'), nullable=False)
     album = relationship("CodeAlbum")
@@ -26,3 +28,4 @@ class CodeAlbum(Base):
     created = Column(DateTime, default=datetime.now)
     objects = relationship(CodeObject, cascade="all, delete, delete-orphan",
                            lazy="dynamic", order_by=desc(CodeObject.created))
+
