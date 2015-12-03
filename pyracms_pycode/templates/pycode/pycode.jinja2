@@ -28,18 +28,20 @@
         <th>Code and Result</th>
       </tr>
       <tr>
-        <td width="200" style="text-align: center;">
-            {% if album.objects.count() > 0 %}
-                <a href="{{ request.route_url("pycode_show_2", a_id=album.id,
-                    o_id=album.objects[0].id) }}">
-                    {{ album.objects[0].display_name }}</a>
-                    {% if request.has_permission("group:admin") %}
-                        (<a href="{{ request.route_url("pycode_delete_object",
-                        a_id=album.id, o_id=album.objects[0].id) }}">Delete</a>)
-                    {% endif %}
-            {% endif %}
+        <td width="200" style="vertical-align: top; text-align: center;">
+          {% for object in album.objects %}
+            <p width="200" class="pycode_file_p">
+                <a href="{{ request.route_url("pycode_show_2",
+                a_id=album.id, o_id=object.id) }}">
+                    {{ object.display_name }}</a>
+                {% if request.has_permission("group:admin") %}
+                    (<a href="{{ request.route_url("pycode_delete_object",
+                    a_id=album.id, o_id=object.id) }}">Delete</a>)
+                {% endif %}
+            </p>
+          {% endfor %}
         </td>
-        <td rowspan="{{ album.objects.count() }}" style="vertical-align: top;" class="pycode_code_td">
+        <td style="vertical-align: top;" class="pycode_code_td">
             <div style="padding: 10px;" class="pycode_code_div">
             {% if object %}
                 <h3 class="pycode_code_display_name">{{ object
@@ -60,21 +62,6 @@
             </div>
         </td>
       </tr>
-          {% for object in album.objects %}
-          {% if not loop.first %}
-              <tr>
-                <td  width="200" style="text-align: center;" class="pycode_file_td">
-                    <a href="{{ request.route_url("pycode_show_2",
-                    a_id=album.id, o_id=object.id) }}">
-                        {{ object.display_name }}</a>
-                    {% if request.has_permission("group:admin") %}
-                        (<a href="{{ request.route_url("pycode_delete_object",
-                        a_id=album.id, o_id=object.id) }}">Delete</a>)
-                    {% endif %}
-                </td>
-              </tr>
-          {% endif %}
-      {% endfor %}
     </table>
 
 {% endblock content %}
