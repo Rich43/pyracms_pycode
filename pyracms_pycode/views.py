@@ -27,7 +27,7 @@ def run_code(code):
     subproc = subprocess.Popen(["python3", tf.name], stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     try:
-        subproc.wait(timeout=15)
+        subproc.wait(timeout=60)
         stderr = subproc.stderr.read()
         stdout = subproc.stdout.read()
     except subprocess.TimeoutExpired:
