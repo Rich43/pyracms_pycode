@@ -29,14 +29,14 @@
       </tr>
       <tr>
         <td width="200" style="vertical-align: top; text-align: center;">
-          {% for object in album.objects %}
+          {% for o_id, display_name in list_objects %}
             <p width="200" class="pycode_file_p">
                 <a href="{{ request.route_url("pycode_show_2",
-                a_id=album.id, o_id=object.id) }}">
-                    {{ object.display_name }}</a>
+                a_id=album.id, o_id=o_id) }}">
+                    {{ display_name }}</a>
                 {% if request.has_permission("group:admin") %}
                     (<a href="{{ request.route_url("pycode_delete_object",
-                    a_id=album.id, o_id=object.id) }}">Delete</a>)
+                    a_id=album.id, o_id=o_id) }}">Delete</a>)
                 {% endif %}
             </p>
           {% endfor %}

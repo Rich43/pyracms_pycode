@@ -27,5 +27,5 @@ class CodeAlbum(Base):
     description = Column(UnicodeText, default='')
     created = Column(DateTime, default=datetime.now)
     objects = relationship(CodeObject, cascade="all, delete, delete-orphan",
-                           lazy="dynamic", order_by=desc(CodeObject.display_name))
+                           lazy="dynamic", order_by=CodeObject.display_name)
 

@@ -2,6 +2,14 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from ..models import CodeAlbum, CodeObject
 from pyracms.models import DBSession
+import re
+
+def sort_nicely(l): 
+    """Sort the given list in the way that humans expect. """ 
+    convert = lambda text: int(text) if text.isdigit() else text
+    alphanum_key = (lambda key: [ convert(c) 
+                    for c in re.split('([0-9]+)', key[1]) ])
+    return sorted(l, key=alphanum_key)
 
 class PyCodeLib:
     def create_album(self, display_name, description):
@@ -36,3 +44,10 @@ class PyCodeLib:
 
     def delete_object(self, o_id):
         DBSession.delete(self.show_object(o_id))
+
+    def list_objects(self, a_id):
+        album = self.show_album(a_id)
+        sort_objs = [[object.id, object.display_name] 
+                      for object in album.objects]
+        sort_objs = sort_nicely(sort_objs)
+        return sort_objs

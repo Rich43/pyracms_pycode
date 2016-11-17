@@ -102,7 +102,8 @@ def show(context, request):
             return rap_def
     result_2.update({'album': p.show_album(a_id), 'object': object,
                      'result': result, 'exception': excepton,
-                     'highlight': code_format})
+                     'highlight': code_format, "list_objects": 
+                     p.list_objects(a_id)})
     return result_2
 
 @view_config(route_name='pycode_create_object', permission="group:admin")
