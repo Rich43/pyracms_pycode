@@ -1,13 +1,13 @@
 FROM python:latest
 
 # We copy this file first to leverage docker cache
-COPY ./requirements.txt /app/requirements.txt
+COPY ./requirements.txt /code/pycode/requirements.txt
 
-WORKDIR /app
+WORKDIR /code/pycode
 
 RUN pip install -r requirements.txt
 
-COPY . /app
+COPY . /code/pycode
 
 RUN python setup.py install
 
